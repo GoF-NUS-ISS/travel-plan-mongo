@@ -1,0 +1,51 @@
+{
+    "containerDefinitions": [ 
+      {
+        "essential": true,
+        "name": "mongo",
+        "image": "docker.io/mongo:4.0",
+        "portMappings": [
+          {
+            "containerPort": 27017,
+            "hostPort": 27017,
+            "protocol": "tcp"
+          }
+        ],
+        "command": [
+          "--smallfiles"
+        ],
+        "mountPoints": [
+          {
+            "containerPath": "/data/db",
+            "sourceVolume": "efs-volume"
+          }
+        ],
+        "logConfiguration":{
+          "logDriver":"awslogs",
+          "options":{
+            "awslogs-group":"/ecs/traval-plan-mongo",
+            "awslogs-region":"us-east-1",
+            "awslogs-stream-prefix":"ecs/mongo"
+          }
+        }
+      }
+    ],
+
+    "cpu": "256",
+    "executionRoleArn": "arn:aws:iam::356567610291:role/ecsTaskExecutionRole",
+    "family": "task-def-travel-plan-mongo",
+    "memory": "512",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": [ 
+        "FARGATE" 
+     ],
+    "volumes": [
+          {
+            "name": "efs-volume",
+            "efsVolumeConfiguration": {
+              "fileSystemId": "fs-b09bcf32",
+              "rootDirectory": "/data"
+            }
+          }
+        ]
+ }
